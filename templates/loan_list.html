@@ -1,0 +1,52 @@
+<!-- templates/loan_list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">Loan Applications</h1>
+    
+    {% if loans %}
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer ID</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Loan Amount</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asset Cost</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">LTV</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Disbursement Date</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EMI Amount</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for loan in loans %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ loan.id }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ loan.customer_id }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{{ loan.amount_disbursed|round(2) }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{{ loan.asset_cost|round(2) }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ loan.loan_to_value|round(2) }}%</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ loan.disbursement_date.strftime('%d-%m-%Y') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{{ loan.emi_amount|round(2) }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ loan.vehicle_manufacturer }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <a href="#" class="text-indigo-600 hover:text-indigo-900">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+        <p class="text-gray-500">No loan applications found.</p>
+        <a href="/loan-application" class="mt-4 inline-block px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Create New Application</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

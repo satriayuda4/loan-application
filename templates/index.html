@@ -1,0 +1,21 @@
+<!-- templates/index.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="text-3xl font-bold mb-6">Welcome to the Loan Management System</h1>
+    <p class="mb-8 text-lg">Manage and track loan applications efficiently</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <a href="/loan-application" class="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <h2 class="text-xl font-bold mb-2 text-indigo-600">New Loan Application</h2>
+            <p>Create a new loan application for a customer</p>
+        </a>
+        
+        <a href="/loan-list" class="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <h2 class="text-xl font-bold mb-2 text-indigo-600">View Loan Applications</h2>
+            <p>View and manage existing loan applications</p>
+        </a>
+    </div>
+</div>
+{% endblock %}

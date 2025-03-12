@@ -1,0 +1,402 @@
+<!-- templates/loan_application.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">New Loan Application</h1>
+    
+    <form method="POST" action="/loan-application" class="space-y-6">
+        <!-- Primary Customer Information Section -->
+        <div class="form-section">
+            <h2 class="section-title">1.1 Customer Information (Primary)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label class="form-label" for="primary_unique_id">Customer Identifier</label>
+                    <input type="text" id="primary_unique_id" name="primary_unique_id" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="primary_dob">Date of Birth</label>
+                    <input type="date" id="primary_dob" name="primary_dob" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="primary_employment_type">Employment Type</label>
+                    <select id="primary_employment_type" name="primary_employment_type" class="form-select" required>
+                        <option value="">Select Type</option>
+                        <option value="Salaried">Salaried</option>
+                        <option value="Self Employed">Self Employed</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="primary_pincode">Current Pincode</label>
+                    <input type="text" id="primary_pincode" name="primary_pincode" class="form-input" pattern="[0-9]{6}" required>
+                </div>
+            </div>
+            
+            <h3 class="text-lg font-semibold mt-4 mb-2">Customer Documents</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div class="form-group">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="primary_shared_mobile" name="primary_shared_mobile" class="form-checkbox" value="1">
+                        <label class="ml-2" for="primary_shared_mobile">Mobile Number</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="primary_shared_aadhar" name="primary_shared_aadhar" class="form-checkbox" value="1">
+                        <label class="ml-2" for="primary_shared_aadhar">Aadhar Card</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="primary_shared_pan" name="primary_shared_pan" class="form-checkbox" value="1">
+                        <label class="ml-2" for="primary_shared_pan">PAN Card</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="primary_shared_voter" name="primary_shared_voter" class="form-checkbox" value="1">
+                        <label class="ml-2" for="primary_shared_voter">Voter ID</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="primary_shared_dl" name="primary_shared_dl" class="form-checkbox" value="1">
+                        <label class="ml-2" for="primary_shared_dl">Driving License</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="primary_shared_passport" name="primary_shared_passport" class="form-checkbox" value="1">
+                        <label class="ml-2" for="primary_shared_passport">Passport</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Secondary Customer Toggle -->
+        <div class="form-section">
+            <div class="form-group">
+                <div class="flex items-center">
+                    <input type="checkbox" id="has_secondary_customer" name="has_secondary_customer" class="form-checkbox" value="1" onchange="toggleSecondaryCustomer()">
+                    <label class="ml-2 font-semibold" for="has_secondary_customer">Include Secondary Customer</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Secondary Customer Information Section (Initially Hidden) -->
+        <div id="secondary_customer_section" class="form-section hidden">
+            <h2 class="section-title">1.2 Customer Information (Secondary)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label class="form-label" for="secondary_unique_id">Customer Identifier</label>
+                    <input type="text" id="secondary_unique_id" name="secondary_unique_id" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="secondary_dob">Date of Birth</label>
+                    <input type="date" id="secondary_dob" name="secondary_dob" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="secondary_employment_type">Employment Type</label>
+                    <select id="secondary_employment_type" name="secondary_employment_type" class="form-select">
+                        <option value="">Select Type</option>
+                        <option value="Salaried">Salaried</option>
+                        <option value="Self Employed">Self Employed</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="secondary_pincode">Current Pincode</label>
+                    <input type="text" id="secondary_pincode" name="secondary_pincode" class="form-input" pattern="[0-9]{6}">
+                </div>
+            </div>
+            
+            <h3 class="text-lg font-semibold mt-4 mb-2">Customer Documents</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div class="form-group">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="secondary_shared_mobile" name="secondary_shared_mobile" class="form-checkbox" value="1">
+                        <label class="ml-2" for="secondary_shared_mobile">Mobile Number</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="secondary_shared_aadhar" name="secondary_shared_aadhar" class="form-checkbox" value="1">
+                        <label class="ml-2" for="secondary_shared_aadhar">Aadhar Card</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="secondary_shared_pan" name="secondary_shared_pan" class="form-checkbox" value="1">
+                        <label class="ml-2" for="secondary_shared_pan">PAN Card</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="secondary_shared_voter" name="secondary_shared_voter" class="form-checkbox" value="1">
+                        <label class="ml-2" for="secondary_shared_voter">Voter ID</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="secondary_shared_dl" name="secondary_shared_dl" class="form-checkbox" value="1">
+                        <label class="ml-2" for="secondary_shared_dl">Driving License</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="secondary_shared_passport" name="secondary_shared_passport" class="form-checkbox" value="1">
+                        <label class="ml-2" for="secondary_shared_passport">Passport</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Loan Details Section -->
+        <div class="form-section">
+            <h2 class="section-title">2. Loan Details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label class="form-label" for="loan_amount">Loan Amount (₹)</label>
+                    <input type="number" id="loan_amount" name="loan_amount" class="form-input" min="0" step="1000" required onchange="calculateLTV()">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="asset_cost">Asset Cost (₹)</label>
+                    <input type="number" id="asset_cost" name="asset_cost" class="form-input" min="0" step="1000" required onchange="calculateLTV()">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="loan_to_value">Loan to Value (%)</label>
+                    <input type="text" id="loan_to_value" name="loan_to_value" class="form-input bg-gray-100" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="branch">Disbursement Branch</label>
+                    <input type="text" id="branch" name="branch" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="vehicle_dealer">Vehicle Dealer</label>
+                    <input type="text" id="vehicle_dealer" name="vehicle_dealer" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="vehicle_manufacturer">Vehicle Manufacturer</label>
+                    <select id="vehicle_manufacturer" name="vehicle_manufacturer" class="form-select" required>
+                        <option value="">Select Manufacturer</option>
+                        <option value="Hero">Hero</option>
+                        <option value="Honda">Honda</option>
+                        <option value="TVS">TVS</option>
+                        <option value="Bajaj">Bajaj</option>
+                        <option value="Royal Enfield">Royal Enfield</option>
+                        <option value="Yamaha">Yamaha</option>
+                        <option value="Suzuki">Suzuki</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="disbursement_date">Disbursement Date</label>
+                    <input type="date" id="disbursement_date" name="disbursement_date" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="disbursement_state">Disbursement State</label>
+                    <input type="text" id="disbursement_state" name="disbursement_state" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="employee_name">Employee Name</label>
+                    <input type="text" id="employee_name" name="employee_name" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="primary_emi_amount">EMI Amount (₹)</label>
+                    <input type="number" id="primary_emi_amount" name="primary_emi_amount" class="form-input" min="0" required>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Credit Bureau Information - Primary -->
+        <div class="form-section">
+            <h2 class="section-title">3.1 Credit Bureau Information (Primary)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label class="form-label" for="primary_bureau_score">Bureau Score</label>
+                    <input type="number" id="primary_bureau_score" name="primary_bureau_score" class="form-input" min="300" max="900">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="primary_bureau_description">Bureau Score Description</label>
+                    <input type="text" id="primary_bureau_description" name="primary_bureau_description" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="primary_total_loans">Total Loans</label>
+                    <input type="number" id="primary_total_loans" name="primary_total_loans" class="form-input" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="primary_active_loans">Active Loans</label>
+                    <input type="number" id="primary_active_loans" name="primary_active_loans" class="form-input" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="primary_default_accounts">Default Accounts</label>
+                    <input type="number" id="primary_default_accounts" name="primary_default_accounts" class="form-input" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="primary_outstanding_amount">Principal Outstanding Amount (₹)</label>
+                    <input type="number" id="primary_outstanding_amount" name="primary_outstanding_amount" class="form-input" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="primary_total_sanctioned">Total Sanctioned Amount (₹)</label>
+                    <input type="number" id="primary_total_sanctioned" name="primary_total_sanctioned" class="form-input" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="primary_total_disbursed">Total Disbursed Amount (₹)</label>
+                    <input type="number" id="primary_total_disbursed" name="primary_total_disbursed" class="form-input" min="0">
+                </div>
+            </div>
+        </div>
+        <!-- Continuing templates/loan_application.html -->
+        
+        <!-- Credit Bureau Information - Secondary (Initially Hidden) -->
+        <div id="secondary_credit_bureau" class="form-section hidden">
+            <h2 class="section-title">3.2 Credit Bureau Information (Secondary)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label class="form-label" for="secondary_bureau_score">Bureau Score</label>
+                    <input type="number" id="secondary_bureau_score" name="secondary_bureau_score" class="form-input" min="300" max="900">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="secondary_bureau_description">Bureau Score Description</label>
+                    <input type="text" id="secondary_bureau_description" name="secondary_bureau_description" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="secondary_total_loans">Total Loans</label>
+                    <input type="number" id="secondary_total_loans" name="secondary_total_loans" class="form-input" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="secondary_active_loans">Active Loans</label>
+                    <input type="number" id="secondary_active_loans" name="secondary_active_loans" class="form-input" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="secondary_default_accounts">Default Accounts</label>
+                    <input type="number" id="secondary_default_accounts" name="secondary_default_accounts" class="form-input" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="secondary_outstanding_amount">Principal Outstanding Amount (₹)</label>
+                    <input type="number" id="secondary_outstanding_amount" name="secondary_outstanding_amount" class="form-input" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="secondary_total_sanctioned">Total Sanctioned Amount (₹)</label>
+                    <input type="number" id="secondary_total_sanctioned" name="secondary_total_sanctioned" class="form-input" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="secondary_total_disbursed">Total Disbursed Amount (₹)</label>
+                    <input type="number" id="secondary_total_disbursed" name="secondary_total_disbursed" class="form-input" min="0">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Loan Terms & History Section -->
+        <div class="form-section">
+            <h2 class="section-title">4. Loan Terms & History</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="first_emi_default" name="first_emi_default" class="form-checkbox" value="1">
+                        <label class="ml-2" for="first_emi_default">Payment default in first EMI</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="new_loans_6m">New loans in last 6 months</label>
+                    <input type="number" id="new_loans_6m" name="new_loans_6m" class="form-input" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="defaults_6m">Loans defaulted in last 6 months</label>
+                    <input type="number" id="defaults_6m" name="defaults_6m" class="form-input" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="avg_loan_tenure">Average loan tenure (months)</label>
+                    <input type="number" id="avg_loan_tenure" name="avg_loan_tenure" class="form-input" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="time_since_first_loan">Time since first loan (months)</label>
+                    <input type="number" id="time_since_first_loan" name="time_since_first_loan" class="form-input" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="loan_enquiries">Loan enquiries in last 6 months</label>
+                    <input type="number" id="loan_enquiries" name="loan_enquiries" class="form-input" min="0">
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex justify-end space-x-4">
+            <button type="reset" class="btn-secondary w-auto px-6">Reset</button>
+            <button type="submit" class="btn-primary w-auto px-6">Submit Application</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function toggleSecondaryCustomer() {
+        const hasSecondary = document.getElementById('has_secondary_customer').checked;
+        const secondarySection = document.getElementById('secondary_customer_section');
+        const secondaryCreditBureau = document.getElementById('secondary_credit_bureau');
+        
+        if (hasSecondary) {
+            secondarySection.classList.remove('hidden');
+            secondaryCreditBureau.classList.remove('hidden');
+        } else {
+            secondarySection.classList.add('hidden');
+            secondaryCreditBureau.classList.add('hidden');
+        }
+    }
+    
+    function calculateLTV() {
+        const loanAmount = parseFloat(document.getElementById('loan_amount').value) || 0;
+        const assetCost = parseFloat(document.getElementById('asset_cost').value) || 0;
+        
+        if (assetCost > 0) {
+            const ltv = (loanAmount / assetCost * 100).toFixed(2);
+            document.getElementById('loan_to_value').value = ltv;
+        } else {
+            document.getElementById('loan_to_value').value = '';
+        }
+    }
+</script>
+{% endblock %}
